@@ -31,8 +31,12 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
+    # Install the PHP mysqli extention
+    docker-php-ext-install mysqli && \
     # Install the PHP pdo_mysql extention
     docker-php-ext-install pdo_mysql && \
+    # Install the PHP pgsql extension
+    docker-php-ext-install pgsql && \
     # Install the PHP pdo_pgsql extention
     docker-php-ext-install pdo_pgsql && \
     # Install the PHP gd library
