@@ -15,6 +15,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get upgrade -y; \
     apt-get install -y --no-install-recommends \
+            apt-utils \
             curl \
             libmemcached-dev \
             libz-dev \
@@ -24,7 +25,8 @@ RUN set -eux; \
             libfreetype6-dev \
             libssl-dev \
             libmcrypt-dev \
-            libonig-dev; \
+            libonig-dev \
+            libzip-dev zip unzip; \
     rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
@@ -34,4 +36,7 @@ RUN set -eux; \
     docker-php-ext-install pdo_pgsql && \
     # Install the PHP gd library
     docker-php-ext-configure gd  --prefix=/usr --with-jpeg --with-freetype; \
-    docker-php-ext-install gd
+    docker-php-ext-install gd && \
+    # Install the PHP zip library
+    docker-php-ext-configure zip; \
+    docker-php-ext-install zip
