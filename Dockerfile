@@ -53,7 +53,11 @@ RUN set -eux; \
     # Install the PHP xsl extension
     docker-php-ext-install xsl && \
     # Enable the xDebug extension
-    docker-php-ext-enable xdebug
+    docker-php-ext-enable xdebug && \
+    # Install the PHP bcmath extension
+    docker-php-ext-install bcmath && \
+    # Install the PHP exif extension
+    docker-php-ext-install exif
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
