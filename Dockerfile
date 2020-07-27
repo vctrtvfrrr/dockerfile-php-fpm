@@ -29,9 +29,13 @@ RUN set -eux; \
             libzip-dev zip unzip \
             libbz2-dev \
             libxslt-dev \
-            zlib1g-dev libicu-dev g++; \
+            zlib1g-dev libicu-dev g++ \
+            jpegoptim optipng pngquant gifsicle \
+            libmagickwand-dev imagemagick; \
     pecl channel-update pecl.php.net; \
-    pecl install xdebug && \
+    pecl install \
+         xdebug \
+         imagick && \
     rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
@@ -61,7 +65,9 @@ RUN set -eux; \
     docker-php-ext-install exif && \
     # Install the PHP intl extension
     docker-php-ext-configure intl; \
-    docker-php-ext-install intl
+    docker-php-ext-install intl && \
+    # Enable the ImageMagick extension
+    docker-php-ext-enable imagick
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
