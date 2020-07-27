@@ -30,8 +30,9 @@ RUN set -eux; \
             libbz2-dev \
             libxslt-dev \
             zlib1g-dev libicu-dev g++ \
-            jpegoptim optipng pngquant gifsicle \
-            libmagickwand-dev imagemagick; \
+            jpegoptim optipng pngquant gifsicle ffmpeg \
+            libmagickwand-dev imagemagick \
+            libc-client-dev libkrb5-dev; \
     pecl channel-update pecl.php.net; \
     pecl install \
          xdebug \
@@ -67,7 +68,12 @@ RUN set -eux; \
     docker-php-ext-configure intl; \
     docker-php-ext-install intl && \
     # Enable the ImageMagick extension
-    docker-php-ext-enable imagick
+    docker-php-ext-enable imagick && \
+    # Install the PHP imap extension
+    docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
+    docker-php-ext-install imap && \
+    # Install the PHP xmlrpc extension
+    docker-php-ext-install xmlrpc
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
