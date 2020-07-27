@@ -28,7 +28,8 @@ RUN set -eux; \
             libonig-dev \
             libzip-dev zip unzip \
             libbz2-dev \
-            libxslt-dev; \
+            libxslt-dev \
+            zlib1g-dev libicu-dev g++; \
     pecl channel-update pecl.php.net; \
     pecl install xdebug && \
     rm -rf /var/lib/apt/lists/*
@@ -57,7 +58,10 @@ RUN set -eux; \
     # Install the PHP bcmath extension
     docker-php-ext-install bcmath && \
     # Install the PHP exif extension
-    docker-php-ext-install exif
+    docker-php-ext-install exif && \
+    # Install the PHP intl extension
+    docker-php-ext-configure intl; \
+    docker-php-ext-install intl
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
