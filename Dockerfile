@@ -26,7 +26,8 @@ RUN set -eux; \
             libssl-dev \
             libmcrypt-dev \
             libonig-dev \
-            libzip-dev zip unzip; \
+            libzip-dev zip unzip \
+            libbz2-dev; \
     rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
@@ -39,4 +40,6 @@ RUN set -eux; \
     docker-php-ext-install gd && \
     # Install the PHP zip library
     docker-php-ext-configure zip; \
-    docker-php-ext-install zip
+    docker-php-ext-install zip && \
+    # Install the PHP bz2 library
+    docker-php-ext-install bz2
