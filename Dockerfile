@@ -10,70 +10,112 @@ ENV DEBIAN_FRONTEND noninteractive
 # Software's Installation
 #--------------------------------------------------------------------------
 #
-# Installing tools and PHP extentions using "apt", "docker-php" and "pecl"
+# Installing tools and PHP extentions
+
 RUN set -eux; \
     apt-get update; \
     apt-get upgrade -y; \
     apt-get install -y --no-install-recommends \
-            apt-utils \
-            curl \
-            libmemcached-dev \
-            libz-dev \
-            libpq-dev \
-            libjpeg-dev \
-            libpng-dev \
-            libfreetype6-dev \
-            libssl-dev \
-            libmcrypt-dev \
-            libonig-dev \
-            libzip-dev zip unzip \
-            libbz2-dev \
-            libxslt-dev \
-            zlib1g-dev libicu-dev g++ \
-            jpegoptim optipng pngquant gifsicle ffmpeg \
-            libmagickwand-dev imagemagick \
-            libc-client-dev libkrb5-dev; \
+        apt-utils \
+        libmemcached-dev \
+        libz-dev \
+        libmcrypt-dev \
+        zlib1g-dev libicu-dev g++ \
+        libjpeg-dev libpng-dev libfreetype6-dev jpegoptim optipng pngquant gifsicle ffmpeg \
+        libmagickwand-dev imagemagick \
+        libonig-dev \
+        libzip-dev zip unzip \
+        libldb-dev \
+        libldap2-dev \
+        libxml2-dev \
+        libssl-dev \
+        libxslt-dev \
+        libpq-dev \
+        libsqlite3-dev \
+        libsqlite3-0 \
+        libc-client-dev \
+        libkrb5-dev \
+        curl \
+        libcurl4-gnutls-dev \
+        libpspell-dev \
+        aspell-en \
+        aspell-pt \
+        aspell-pt-br \
+        libtidy-dev \
+        libsnmp-dev \
+        librecode0 \
+        librecode-dev \
+        libgmp-dev \
+        libreadline-dev libedit-dev \
+        libbz2-dev && \
     pecl channel-update pecl.php.net; \
     pecl install \
-         xdebug \
-         imagick && \
+        # apcu \
+        mcrypt-1.0.3 \
+        xdebug \
+        imagick && \
     rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
-    # Install the PHP mysqli extention
-    docker-php-ext-install mysqli && \
-    # Install the PHP pdo_mysql extention
-    docker-php-ext-install pdo_mysql && \
-    # Install the PHP pgsql extension
-    docker-php-ext-install pgsql && \
-    # Install the PHP pdo_pgsql extention
-    docker-php-ext-install pdo_pgsql && \
-    # Install the PHP gd extension
-    docker-php-ext-configure gd  --prefix=/usr --with-jpeg --with-freetype; \
-    docker-php-ext-install gd && \
-    # Install the PHP zip extension
-    docker-php-ext-configure zip; \
-    docker-php-ext-install zip && \
-    # Install the PHP bz2 extension
-    docker-php-ext-install bz2 && \
-    # Install the PHP xsl extension
-    docker-php-ext-install xsl && \
-    # Enable the xDebug extension
+    # docker-php-ext-enable apcu && \
     docker-php-ext-enable xdebug && \
-    # Install the PHP bcmath extension
-    docker-php-ext-install bcmath && \
-    # Install the PHP exif extension
-    docker-php-ext-install exif && \
-    # Install the PHP intl extension
-    docker-php-ext-configure intl; \
-    docker-php-ext-install intl && \
-    # Enable the ImageMagick extension
     docker-php-ext-enable imagick && \
-    # Install the PHP imap extension
-    docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
+    docker-php-ext-configure intl && \
+    docker-php-ext-install -j$(nproc) intl && \
+    docker-php-ext-configure gd --prefix=/usr --with-jpeg --with-freetype && \
+    docker-php-ext-install -j$(nproc) gd && \
+    docker-php-ext-install opcache && \
+    docker-php-ext-install soap && \
+    docker-php-ext-install ftp && \
+    docker-php-ext-install xsl && \
+    docker-php-ext-install bcmath && \
+    docker-php-ext-install calendar && \
+    docker-php-ext-install ctype && \
+    docker-php-ext-install dba && \
+    docker-php-ext-install dom && \
+    docker-php-ext-install zip && \
+    docker-php-ext-install session && \
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu && \
+    docker-php-ext-install ldap && \
+    docker-php-ext-install json && \
+    docker-php-ext-install sockets && \
+    docker-php-ext-install pdo && \
+    docker-php-ext-install mbstring && \
+    docker-php-ext-install tokenizer && \
+    docker-php-ext-install pgsql && \
+    docker-php-ext-install pdo_pgsql && \
+    docker-php-ext-install pdo_mysql && \
+    docker-php-ext-install pdo_sqlite && \
+    docker-php-ext-enable mcrypt && \
+    docker-php-ext-install mysqli && \
+    docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-install imap && \
-    # Install the PHP xmlrpc extension
-    docker-php-ext-install xmlrpc
+    docker-php-ext-install gd && \
+    docker-php-ext-install curl && \
+    docker-php-ext-install exif && \
+    docker-php-ext-install fileinfo && \
+    docker-php-ext-install gettext && \
+    docker-php-ext-install gmp && \
+    docker-php-ext-install iconv && \
+    docker-php-ext-install opcache && \
+    docker-php-ext-install pcntl && \
+    docker-php-ext-install phar && \
+    docker-php-ext-install posix && \
+    docker-php-ext-install pspell && \
+    docker-php-ext-install readline && \
+    docker-php-ext-install shmop && \
+    docker-php-ext-install simplexml && \
+    docker-php-ext-install snmp && \
+    docker-php-ext-install sysvmsg && \
+    docker-php-ext-install sysvsem && \
+    docker-php-ext-install sysvshm && \
+    docker-php-ext-install tidy && \
+    docker-php-ext-install xml && \
+    docker-php-ext-install xmlrpc && \
+    docker-php-ext-install xmlwriter && \
+    docker-php-ext-install bz2
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
